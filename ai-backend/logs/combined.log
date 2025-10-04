@@ -1,0 +1,21 @@
+{"level":"info","message":"🤖 AI Backend server running on port 8001","service":"ai-backend","timestamp":"2025-09-24T01:13:59.761Z"}
+{"level":"info","message":"🔗 Health check: http://localhost:8001/healthz","service":"ai-backend","timestamp":"2025-09-24T01:13:59.763Z"}
+{"level":"info","message":"🧠 AI API: http://localhost:8001/api/v1/ai","service":"ai-backend","timestamp":"2025-09-24T01:13:59.763Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:14:23 +0000] \"GET /healthz HTTP/1.1\" 200 90 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:14:23.944Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:14:37 +0000] \"GET /api/v1/ai/status HTTP/1.1\" 401 64 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:14:37.222Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:14:47 +0000] \"POST /api/v1/ai/predict/health-risk HTTP/1.1\" 401 64 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:14:47.413Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","service":"ai-backend","timestamp":"2025-09-24T01:16:40.042Z"}
+{"level":"info","message":"🤖 AI Backend server running on port 8001","service":"ai-backend","timestamp":"2025-09-24T01:16:50.292Z"}
+{"level":"info","message":"🔗 Health check: http://localhost:8001/healthz","service":"ai-backend","timestamp":"2025-09-24T01:16:50.293Z"}
+{"level":"info","message":"🧠 AI API: http://localhost:8001/api/v1/ai","service":"ai-backend","timestamp":"2025-09-24T01:16:50.293Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:17:11 +0000] \"POST /api/v1/ai/predict/health-risk HTTP/1.1\" 401 64 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:17:11.947Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:17:38 +0000] \"POST /api/v1/ai/predict/health-risk HTTP/1.1\" 401 64 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:17:38.513Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","service":"ai-backend","timestamp":"2025-09-24T01:18:10.356Z"}
+{"level":"info","message":"🤖 AI Backend server running on port 8001","service":"ai-backend","timestamp":"2025-09-24T01:18:12.578Z"}
+{"level":"info","message":"🔗 Health check: http://localhost:8001/healthz","service":"ai-backend","timestamp":"2025-09-24T01:18:12.579Z"}
+{"level":"info","message":"🧠 AI API: http://localhost:8001/api/v1/ai","service":"ai-backend","timestamp":"2025-09-24T01:18:12.580Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:18:38 +0000] \"POST /api/v1/ai/predict/health-risk HTTP/1.1\" 200 1240 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:18:38.428Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:19:38 +0000] \"POST /api/v1/ai/analyze/gene-expression HTTP/1.1\" 200 1268 \"http://localhost:3000/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15\"","service":"ai-backend","timestamp":"2025-09-24T01:19:38.188Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:20:18 +0000] \"POST /api/v1/ai/analyze/gene-expression HTTP/1.1\" 200 1267 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:20:18.854Z"}
+{"level":"info","message":"::1 - - [24/Sep/2025:01:20:30 +0000] \"POST /api/v1/ai/simulate/mission HTTP/1.1\" 200 1797 \"-\" \"curl/8.7.1\"","service":"ai-backend","timestamp":"2025-09-24T01:20:30.487Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","service":"ai-backend","timestamp":"2025-09-26T15:05:40.602Z"}

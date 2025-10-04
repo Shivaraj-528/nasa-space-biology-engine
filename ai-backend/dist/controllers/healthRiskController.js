@@ -1,0 +1,141 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.healthRiskPrediction = void 0;
+const uuid_1 = require("uuid");
+const healthRiskPrediction = async (req, res) => {
+    try {
+        const { biomarkers, metadata } = req.body;
+        console.log(`[AI] Health risk prediction requested for subject: ${metadata.subject}`);
+        await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+        const riskScore = calculateHealthRisk(biomarkers, metadata);
+        const riskLevel = getRiskLevel(riskScore);
+        const biomarkerAnalysis = analyzeBiomarkers(biomarkers);
+        const recommendations = generateRecommendations(biomarkers, riskScore, metadata);
+        const confidence = calculateConfidence(biomarkers, metadata);
+        const result = {
+            analysis_id: (0, uuid_1.v4)(),
+            risk_score: riskScore,
+            risk_level: riskLevel,
+            biomarker_analysis: biomarkerAnalysis,
+            recommendations,
+            confidence,
+            model_version: '2.1.0',
+            timestamp: new Date().toISOString()
+        };
+        console.log(`[AI] Health risk analysis completed: ${riskLevel} (${riskScore.toFixed(2)})`);
+        res.json({
+            success: true,
+            data: result,
+            processing_time_ms: 1500 + Math.random() * 1000,
+            timestamp: new Date().toISOString()
+        });
+    }
+    catch (error) {
+        console.error('[AI] Health risk prediction error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Health risk prediction failed',
+            code: 'PREDICTION_ERROR',
+            timestamp: new Date().toISOString()
+        });
+    }
+};
+exports.healthRiskPrediction = healthRiskPrediction;
+function calculateHealthRisk(biomarkers, metadata) {
+    let riskScore = 0;
+    const crpNormal = 1.0;
+    const crpWeight = 0.35;
+    riskScore += Math.min((biomarkers.CRP / crpNormal), 3) * crpWeight;
+    const cortisolNormal = 0.5;
+    const cortisolWeight = 0.30;
+    riskScore += Math.min((biomarkers.Cortisol / cortisolNormal), 3) * cortisolWeight;
+    const ckNormal = 1.0;
+    const ckWeight = 0.25;
+    riskScore += Math.min((biomarkers.CK / ckNormal), 3) * ckWeight;
+    if (metadata.mission_duration) {
+        const durationFactor = Math.min(metadata.mission_duration / 180, 2) * 0.1;
+        riskScore += durationFactor;
+    }
+    if (metadata.radiation_exposure) {
+        const radiationFactor = Math.min(metadata.radiation_exposure / 50, 2) * 0.15;
+        riskScore += radiationFactor;
+    }
+    if (metadata.age) {
+        const ageFactor = Math.max(0, (metadata.age - 35) / 35) * 0.1;
+        riskScore += ageFactor;
+    }
+    riskScore += (Math.random() - 0.5) * 0.1;
+    return Math.max(0, Math.min(1, riskScore));
+}
+function getRiskLevel(score) {
+    if (score < 0.3)
+        return 'Low';
+    if (score < 0.6)
+        return 'Moderate';
+    if (score < 0.8)
+        return 'High';
+    return 'Critical';
+}
+function analyzeBiomarkers(biomarkers) {
+    return {
+        CRP: {
+            value: biomarkers.CRP,
+            status: biomarkers.CRP > 3.0 ? 'Elevated' : biomarkers.CRP > 1.0 ? 'Borderline' : 'Normal',
+            reference_range: '< 1.0 mg/L (Normal), 1.0-3.0 mg/L (Borderline), > 3.0 mg/L (Elevated)',
+            impact: biomarkers.CRP > 3.0 ? 'High inflammation risk' : biomarkers.CRP > 1.0 ? 'Mild inflammation' : 'No inflammation detected'
+        },
+        Cortisol: {
+            value: biomarkers.Cortisol,
+            status: biomarkers.Cortisol > 1.0 ? 'Elevated' : biomarkers.Cortisol > 0.6 ? 'Borderline' : 'Normal',
+            reference_range: '< 0.6 μg/dL (Normal), 0.6-1.0 μg/dL (Borderline), > 1.0 μg/dL (Elevated)',
+            impact: biomarkers.Cortisol > 1.0 ? 'High stress response' : biomarkers.Cortisol > 0.6 ? 'Moderate stress' : 'Normal stress levels'
+        },
+        CK: {
+            value: biomarkers.CK,
+            status: biomarkers.CK > 2.0 ? 'Elevated' : biomarkers.CK > 1.2 ? 'Borderline' : 'Normal',
+            reference_range: '< 1.2 μkat/L (Normal), 1.2-2.0 μkat/L (Borderline), > 2.0 μkat/L (Elevated)',
+            impact: biomarkers.CK > 2.0 ? 'Significant muscle damage' : biomarkers.CK > 1.2 ? 'Mild muscle stress' : 'Normal muscle function'
+        }
+    };
+}
+function generateRecommendations(biomarkers, riskScore, metadata) {
+    const recommendations = [];
+    if (biomarkers.CRP > 1.0) {
+        recommendations.push('Monitor inflammatory markers closely');
+        recommendations.push('Consider anti-inflammatory interventions');
+    }
+    if (biomarkers.Cortisol > 0.6) {
+        recommendations.push('Implement stress reduction protocols');
+        recommendations.push('Monitor sleep quality and duration');
+    }
+    if (biomarkers.CK > 1.2) {
+        recommendations.push('Adjust exercise intensity');
+        recommendations.push('Monitor muscle recovery protocols');
+    }
+    if (riskScore > 0.6) {
+        recommendations.push('Increase medical monitoring frequency');
+        recommendations.push('Consider mission timeline adjustments');
+    }
+    if (metadata.mission_duration && metadata.mission_duration > 90) {
+        recommendations.push('Implement long-duration mission health protocols');
+        recommendations.push('Schedule regular health assessments');
+    }
+    recommendations.push('Maintain regular exercise routine');
+    recommendations.push('Monitor hydration and nutrition status');
+    recommendations.push('Continue regular biomarker monitoring');
+    return recommendations;
+}
+function calculateConfidence(biomarkers, metadata) {
+    let confidence = 0.85;
+    if (biomarkers.CRP > 5 || biomarkers.Cortisol > 2 || biomarkers.CK > 3) {
+        confidence -= 0.1;
+    }
+    if (metadata.age && metadata.gender)
+        confidence += 0.05;
+    if (metadata.mission_duration)
+        confidence += 0.03;
+    if (metadata.radiation_exposure)
+        confidence += 0.02;
+    return Math.max(0.7, Math.min(0.95, confidence));
+}
+//# sourceMappingURL=healthRiskController.js.map

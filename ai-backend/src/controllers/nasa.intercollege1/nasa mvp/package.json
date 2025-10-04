@@ -1,0 +1,52 @@
+{
+  "name": "space-biology-knowledge-engine",
+  "version": "1.0.0",
+  "description": "NASA Space Biology Knowledge Engine MVP - A full-stack SaaS platform for space biology research",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.5",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "@tailwindcss/forms": "^0.5.6",
+    "@tailwindcss/typography": "^0.5.10",
+    "next-auth": "^4.24.5",
+    "mongodb": "^6.2.0",
+    "mongoose": "^7.6.3",
+    "axios": "^1.5.1",
+    "recharts": "^2.8.0",
+    "d3": "^7.8.5",
+    "@types/d3": "^7.4.1",
+    "lucide-react": "^0.292.0",
+    "framer-motion": "^10.16.4",
+    "react-hot-toast": "^2.4.1",
+    "react-dropzone": "^14.2.3",
+    "pdf-parse": "^1.1.1",
+    "cheerio": "^1.0.0-rc.12",
+    "xml2js": "^0.6.2",
+    "@types/xml2js": "^0.4.14",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.52.0",
+    "eslint-config-next": "^14.0.0",
+    "@types/pdf-parse": "^1.1.4"
+  }
+}

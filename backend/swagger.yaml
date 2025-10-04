@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: NASA Space Biology Engine API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/v1/datasets:
+    get:
+      summary: List and search datasets
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Register a dataset (placeholder)
+      responses:
+        '201':
+          description: Created
+  /api/v1/biological/{organism}/experiments:
+    get:
+      summary: Get experiment data by organism
+      parameters:
+        - in: path
+          name: organism
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+  /api/v1/astronaut/{id}/health:
+    get:
+      summary: Get astronaut health data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Update astronaut health data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '201':
+          description: Created
+  /api/v1/ai/predict/health-risk:
+    post:
+      summary: Predict health risks from biological markers
+      responses:
+        '200':
+          description: OK
+  /api/v1/ai/analyze/gene-expression:
+    post:
+      summary: Analyze space-induced gene expression changes
+      responses:
+        '200':
+          description: OK
+  /api/v1/ai/simulate/mission:
+    post:
+      summary: Run mission simulation with biological parameters
+      responses:
+        '200':
+          description: OK

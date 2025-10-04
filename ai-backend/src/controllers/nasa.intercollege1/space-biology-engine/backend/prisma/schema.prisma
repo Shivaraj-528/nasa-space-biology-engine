@@ -1,0 +1,217 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  RESEARCHER
+  SCIENTIST
+}
+
+enum PublicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum QuizDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  avatar      String?
+  googleId    String?  @unique // Made optional for email-based auth
+  password    String?  // For email-based authentication
+  role        UserRole @default(STUDENT)
+  institution String?
+  bio         String?
+  verified    Boolean  @default(false)
+  verification Json?   // Store verification data as JSON
+  lastLogin   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  publications Publication[]
+  quizzes      Quiz[]
+  quizAttempts QuizAttempt[]
+  chatSessions ChatSession[]
+  bookmarks    Bookmark[]
+
+  @@map("users")
+}
+
+model Publication {
+  id          String            @id @default(cuid())
+  title       String
+  abstract    String?
+  authors     String // JSON string for SQLite
+  keywords    String // JSON string for SQLite
+  doi         String?
+  arxivId     String?
+  pubmedId    String?
+  nasaId      String?
+  crossrefId  String?
+  pdfUrl      String?
+  pdfPath     String?
+  source      String // NASA, ArXiv, PubMed, CrossRef, Upload
+  status      PublicationStatus @default(PENDING)
+  publishedAt DateTime?
+  uploadedAt  DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // AI-generated content
+  summary     String?
+  keyFindings String? // JSON string for SQLite
+  methodology String?
+
+  // Relations
+  uploadedBy   User?       @relation(fields: [uploadedById], references: [id])
+  uploadedById String?
+  bookmarks    Bookmark[]
+  quizzes      Quiz[]
+  embeddings   Embedding[]
+
+  @@map("publications")
+}
+
+model Embedding {
+  id            String @id @default(cuid())
+  publicationId String
+  chunkText     String
+  embedding     String // JSON string for SQLite
+  chunkIndex    Int
+  createdAt     DateTime @default(now())
+
+  // Relations
+  publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+
+  @@map("embeddings")
+}
+
+model ChatSession {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id            String   @id @default(cuid())
+  sessionId     String
+  role          String // user, assistant, system
+  content       String
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  // Relations
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+}
+
+model Quiz {
+  id            String        @id @default(cuid())
+  title         String
+  description   String?
+  difficulty    QuizDifficulty
+  publicationId String?
+  createdById   String
+  isPublic      Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  publication Publication?   @relation(fields: [publicationId], references: [id])
+  createdBy   User           @relation(fields: [createdById], references: [id])
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id            String   @id @default(cuid())
+  quizId        String
+  question      String
+  options       String // JSON string for SQLite
+  correctAnswer Int
+  explanation   String?
+  order         Int
+  createdAt     DateTime @default(now())
+
+  // Relations
+  quiz    Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  quizId      String
+  userId      String
+  score       Float
+  totalQuestions Int
+  correctAnswers Int
+  timeSpent   Int? // in seconds
+  completedAt DateTime @default(now())
+
+  // Relations
+  quiz    Quiz         @relation(fields: [quizId], references: [id])
+  user    User         @relation(fields: [userId], references: [id])
+  answers QuizAnswer[]
+
+  @@map("quiz_attempts")
+}
+
+model QuizAnswer {
+  id         String @id @default(cuid())
+  attemptId  String
+  questionId String
+  answer     Int
+  isCorrect  Boolean
+  timeSpent  Int? // in seconds
+
+  // Relations
+  attempt  QuizAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question QuizQuestion @relation(fields: [questionId], references: [id])
+
+  @@map("quiz_answers")
+}
+
+model Bookmark {
+  id            String   @id @default(cuid())
+  userId        String
+  publicationId String
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  // Relations
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publication Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, publicationId])
+  @@map("bookmarks")
+}

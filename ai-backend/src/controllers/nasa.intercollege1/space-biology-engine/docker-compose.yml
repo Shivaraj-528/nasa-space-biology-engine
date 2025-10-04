@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: space-biology-db
+    environment:
+      POSTGRES_DB: space_biology_engine
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - space-biology-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ChromaDB Vector Database
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: space-biology-chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    networks:
+      - space-biology-network
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: space-biology-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/space_biology_engine
+      - NASA_API_KEY=wXywYQJfod2J6JMpqTgqbGLYR61Egi4xZNpBOcxv
+      - OPENROUTER_API_KEY=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
+      - GOOGLE_OAUTH_CLIENT_ID=11757822380-9mucb5e4pvjdm4vcatd9bu4hk314us7v.apps.googleusercontent.com
+      - GOOGLE_OAUTH_SECRET=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
+      - JWT_SECRET=space-biology-super-secret-jwt-key-2024
+      - SESSION_SECRET=space-biology-session-secret-2024
+      - FRONTEND_URL=http://localhost:3000
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    volumes:
+      - backend_uploads:/app/uploads
+    networks:
+      - space-biology-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: space-biology-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    networks:
+      - space-biology-network
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  space-biology-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  chroma_data:
+    driver: local
+  backend_uploads:
+    driver: local

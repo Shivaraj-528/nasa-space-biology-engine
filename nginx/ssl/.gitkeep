@@ -1,0 +1,2 @@
+# SSL cert/key files should be placed here for Nginx TLS termination in production.
+# For development, this file simply keeps the directory in version control.
