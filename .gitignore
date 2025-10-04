@@ -1,0 +1,30 @@
+
+# Python
+.venv*/
+__pycache__/
+*.py[cod]
+*.class
+.mypy_cache/
+.pytest_cache/
+
+# Node.js
+node_modules/
+.next/
+.vercel
+
+# Large files
+*.dylib
+*.so
+*.dll
+*.exe
+*.bin
+*.dat
+*.pth
+*.pt
+*.h5
+*.tflite
+*.pb
+*.zip
+*.tar.gz
+*.7z
+
