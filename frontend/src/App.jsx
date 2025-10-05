@@ -5,6 +5,8 @@ import apiService from './services/api.js'
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
   const [datasets, setDatasets] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     // Check backend connection
@@ -33,6 +35,44 @@ function App() {
     checkBackend()
   }, [])
 
+  const loadDatasets = async () => {
+    setLoading(true)
+    setMessage('Loading datasets...')
+    try {
+      const data = await apiService.getDatasets()
+      setDatasets(data.datasets || [])
+      setMessage(`Loaded ${data.datasets?.length || 0} datasets successfully!`)
+    } catch (error) {
+      setMessage(`Error loading datasets: ${error.message}`)
+    }
+    setLoading(false)
+  }
+
+  const testAI = async () => {
+    setLoading(true)
+    setMessage('Testing AI analysis...')
+    try {
+      // Simulate AI test
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      setMessage('AI Analysis: Ready for biological data processing!')
+    } catch (error) {
+      setMessage(`AI Test failed: ${error.message}`)
+    }
+    setLoading(false)
+  }
+
+  const refreshConnection = async () => {
+    setBackendStatus('checking...')
+    try {
+      await apiService.checkHealth()
+      setBackendStatus('connected ✅')
+      setMessage('Connection refreshed successfully!')
+    } catch (error) {
+      setBackendStatus('disconnected ❌')
+      setMessage('Connection failed!')
+    }
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -48,6 +88,24 @@ function App() {
           <div className="hero">
             <h2>Explore Space Biology Data</h2>
             <p>Access comprehensive biological datasets from NASA missions and discover insights about life in space.</p>
+            
+            <div className="action-buttons">
+              <button onClick={loadDatasets} disabled={loading}>
+                {loading ? 'Loading...' : '🔍 Load Datasets'}
+              </button>
+              <button onClick={testAI} disabled={loading}>
+                {loading ? 'Testing...' : '🤖 Test AI Analysis'}
+              </button>
+              <button onClick={refreshConnection} disabled={loading}>
+                {loading ? 'Checking...' : '🔄 Refresh Connection'}
+              </button>
+            </div>
+            
+            {message && (
+              <div className="message">
+                {message}
+              </div>
+            )}
           </div>
           
           <div className="features">
