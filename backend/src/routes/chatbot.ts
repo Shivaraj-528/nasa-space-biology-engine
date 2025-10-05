@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import { nasaChatbot } from '../services/chatbotService';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.post('/chatbot/query', authenticate, async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    const finalSessionId = sessionId || uuidv4();
+    const finalSessionId = sessionId || randomUUID();
     
     const response = await nasaChatbot.processQuery(finalSessionId, userId, message);
     
