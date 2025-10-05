@@ -11,7 +11,7 @@ function LoginPage({ onLogin }) {
     const domain = email.toLowerCase().split('@')[1];
     
     // Student domains
-    const studentDomains = ['.edu', '.ac.', 'student.', 'university.', 'college.'];
+    const studentDomains = ['.edu', '.ac.', 'student.', 'university.', 'college.', 'gmail.com'];
     // Scientist domains  
     const scientistDomains = ['nasa.gov', 'nih.gov', 'nsf.gov', 'research.', 'lab.', 'institute.'];
     // Teacher domains
@@ -167,7 +167,7 @@ function LoginPage({ onLogin }) {
             </div>
             <div className="access-item">
               <span>🎓 Students</span>
-              <small>Basic data exploration</small>
+              <small>Basic access (.edu, gmail.com)</small>
             </div>
           </div>
         </div>
