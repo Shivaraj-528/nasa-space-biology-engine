@@ -16,8 +16,13 @@ function App() {
   const [showChatbot, setShowChatbot] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
   const [showGraphs, setShowGraphs] = useState(false)
-  const [user, setUser] = useState(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState({
+    email: 'demo@nasa.gov',
+    role: 'scientist',
+    name: 'Demo User',
+    permissions: ['view_data', 'export_data', 'ai_analysis', 'advanced_features']
+  })
+  const [isAuthenticated, setIsAuthenticated] = useState(true)
 
   useEffect(() => {
     checkBackend()
@@ -69,10 +74,6 @@ function App() {
   }
 
   const openGraphs = () => {
-    if (!user?.permissions.includes('view_data')) {
-      setMessage('Graph visualization requires data access permissions.')
-      return
-    }
     setShowGraphs(true)
     setMessage('Analytics dashboard opened! Explore research trends and statistics.')
   }
@@ -83,27 +84,15 @@ function App() {
   }
 
   const openChatbot = () => {
-    if (!user?.permissions.includes('ai_analysis')) {
-      setMessage('AI Analysis requires educator or scientist access level.')
-      return
-    }
     setShowChatbot(true)
     setMessage('AI Assistant opened! Ask questions about space biology data.')
   }
 
   const openDataExplorer = () => {
-    if (!user?.permissions.includes('view_data')) {
-      setMessage('Data access restricted. Please contact administrator.')
-      return
-    }
     setShowDataExplorer(true)
   }
 
 
-
-  if (!isAuthenticated) {
-    return <LoginPage onLogin={handleLogin} />
-  }
 
   return (
     <div className="app">
