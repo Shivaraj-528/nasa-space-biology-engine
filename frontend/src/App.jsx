@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import apiService from './services/api.js'
 import DataExplorer from './components/DataExplorer.jsx'
+import AIChatbot from './components/AIChatbot.jsx'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
@@ -9,6 +10,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [showDataExplorer, setShowDataExplorer] = useState(false)
+  const [showChatbot, setShowChatbot] = useState(false)
 
   useEffect(() => {
     checkBackend()
@@ -43,16 +45,9 @@ function App() {
     setLoading(false)
   }
 
-  const testAI = async () => {
-    setLoading(true)
-    setMessage('Testing AI analysis...')
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      setMessage('✅ AI Analysis: Ready for biological data processing!')
-    } catch (error) {
-      setMessage(`❌ AI Test failed: ${error.message}`)
-    }
-    setLoading(false)
+  const openChatbot = () => {
+    setShowChatbot(true)
+    setMessage('AI Assistant opened! Ask questions about space biology data.')
   }
 
   const refreshConnection = async () => {
@@ -90,8 +85,8 @@ function App() {
               <button onClick={() => setShowDataExplorer(true)} disabled={loading}>
                 🔍 Open Data Explorer
               </button>
-              <button onClick={testAI} disabled={loading}>
-                {loading ? 'Testing...' : '🤖 Test AI Analysis'}
+              <button onClick={openChatbot} disabled={loading}>
+                🤖 AI Analysis Chat
               </button>
               <button onClick={refreshConnection} disabled={loading}>
                 {loading ? 'Checking...' : '🔄 Refresh Connection'}
@@ -132,6 +127,11 @@ function App() {
       <DataExplorer 
         isOpen={showDataExplorer} 
         onClose={() => setShowDataExplorer(false)} 
+      />
+      
+      <AIChatbot 
+        isOpen={showChatbot} 
+        onClose={() => setShowChatbot(false)} 
       />
     </div>
   )
