@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import apiService from './services/api.js'
+import DataExplorer from './components/DataExplorer.jsx'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
   const [datasets, setDatasets] = useState([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [showDataExplorer, setShowDataExplorer] = useState(false)
 
   useEffect(() => {
     checkBackend()
@@ -85,8 +87,8 @@ function App() {
             <p>Access comprehensive biological datasets from NASA missions and discover insights about life in space.</p>
             
             <div className="action-buttons">
-              <button onClick={loadDatasets} disabled={loading}>
-                {loading ? 'Loading...' : '🔍 Load Datasets'}
+              <button onClick={() => setShowDataExplorer(true)} disabled={loading}>
+                🔍 Open Data Explorer
               </button>
               <button onClick={testAI} disabled={loading}>
                 {loading ? 'Testing...' : '🤖 Test AI Analysis'}
@@ -126,6 +128,11 @@ function App() {
           <p>© 2024 NASA Space Biology Engine - Open Source Project</p>
         </div>
       </footer>
+      
+      <DataExplorer 
+        isOpen={showDataExplorer} 
+        onClose={() => setShowDataExplorer(false)} 
+      />
     </div>
   )
 }
