@@ -29,7 +29,7 @@ class ApiService {
 
   // Health check
   async checkHealth() {
-    return this.request('/api/health');
+    return this.request('/api/v1/health');
   }
 
   // Get datasets

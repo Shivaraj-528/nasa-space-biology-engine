@@ -4,7 +4,7 @@ export const apiConfig = {
   baseURL: API_BASE_URL,
   endpoints: {
     datasets: '/api/v1/datasets',
-    health: '/api/health',
+    health: '/api/v1/health',
     chatbot: '/api/v1/chatbot',
     auth: '/api/v1/auth'
   }

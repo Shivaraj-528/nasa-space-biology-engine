@@ -10,15 +10,23 @@ function App() {
     // Check backend connection
     const checkBackend = async () => {
       try {
-        await apiService.checkHealth()
+        console.log('Checking backend at:', apiService.baseURL)
+        const healthResponse = await apiService.checkHealth()
+        console.log('Health response:', healthResponse)
         setBackendStatus('connected ✅')
         
         // Load datasets
-        const data = await apiService.getDatasets()
-        setDatasets(data.datasets || [])
+        try {
+          const data = await apiService.getDatasets()
+          setDatasets(data.datasets || [])
+        } catch (dataError) {
+          console.log('Datasets not available, but backend is connected')
+          setDatasets([])
+        }
       } catch (error) {
-        setBackendStatus('disconnected ❌')
+        setBackendStatus(`disconnected ❌ (${error.message})`)
         console.error('Backend connection failed:', error)
+        console.error('API URL:', apiService.baseURL)
       }
     }
 
