@@ -32,6 +32,22 @@
   opacity: 0.8;
 }
 
+.status {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.dataset-count {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #00d4ff;
+  font-weight: 500;
+}
+
 .main {
   padding: 4rem 0;
 }
