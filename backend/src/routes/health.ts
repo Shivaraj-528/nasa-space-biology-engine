@@ -4,6 +4,17 @@ import { authenticate, requireRoles } from '../middleware/auth';
 
 const router = Router();
 
+// GET /api/v1/health - API Health Check
+router.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'NASA Space Biology Engine API',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // GET/POST /api/v1/astronaut/{id}/health
 router.get('/astronaut/:id/health', authenticate, requireRoles('researcher', 'nasa_scientist', 'administrator'), async (req, res) => {
   const { id } = req.params;
