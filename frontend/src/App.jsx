@@ -41,6 +41,7 @@ function App() {
           <h1>🚀 NASA Space Biology Engine</h1>
           <p>Analyzing biological data from space missions with AI-powered insights</p>
           <div className="status">Backend: {backendStatus}</div>
+          <div style={{color: 'yellow', fontSize: '12px'}}>Debug: Environment URL = {import.meta.env.VITE_API_URL || 'NOT SET'}</div>
         </div>
       </header>
       
