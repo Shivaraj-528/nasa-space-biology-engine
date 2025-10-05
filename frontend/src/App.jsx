@@ -20,21 +20,26 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
+    console.log('App loading...')
     checkBackend()
   }, [])
 
   const checkBackend = async () => {
     try {
+      console.log('Checking backend...')
       await apiService.checkHealth()
       setBackendStatus('connected ✅')
+      console.log('Backend connected')
       
       try {
         const data = await apiService.getDatasets()
         setDatasets(data.datasets || [])
       } catch (dataError) {
+        console.log('Dataset error:', dataError)
         setDatasets([])
       }
     } catch (error) {
+      console.log('Backend error:', error)
       setBackendStatus('disconnected ❌')
     }
   }
