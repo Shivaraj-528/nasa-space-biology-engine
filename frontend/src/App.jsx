@@ -5,6 +5,7 @@ import DataExplorer from './components/DataExplorer.jsx'
 import AIChatbot from './components/AIChatbot.jsx'
 import Quiz from './components/Quiz.jsx'
 import GraphVisualization from './components/GraphVisualization.jsx'
+import LoginPage from './components/LoginPage.jsx'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
@@ -15,6 +16,8 @@ function App() {
   const [showChatbot, setShowChatbot] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
   const [showGraphs, setShowGraphs] = useState(false)
+  const [user, setUser] = useState(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     checkBackend()
@@ -36,9 +39,37 @@ function App() {
     }
   }
 
-  const openGraphs = () => {
-    setShowGraphs(true)
-    setMessage('Analytics dashboard opened! Explore research trends and statistics.')
+  const handleLogin = (userData) => {
+    setUser(userData)
+    setIsAuthenticated(true)
+    setMessage(`Welcome ${userData.name}! You have ${userData.role} access.`)
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    setIsAuthenticated(false)
+    setShowDataExplorer(false)
+    setShowChatbot(false)
+    setShowQuiz(false)
+    setShowGraphs(false)
+    setMessage('')
+  }
+
+  const openDataExplorer = () => {
+    if (!user?.permissions.includes('view_data')) {
+      setMessage('Data access restricted. Please contact administrator.')
+      return
+    }
+    setShowDataExplorer(true)
+  }
+
+  const openChatbot = () => {
+    if (!user?.permissions.includes('ai_analysis')) {
+      setMessage('AI Analysis requires educator or scientist access level.')
+      return
+    }
+    setShowChatbot(true)
+    setMessage('AI Assistant opened! Ask questions about space biology data.')
   }
 
   const openQuiz = () => {
@@ -46,13 +77,17 @@ function App() {
     setMessage('Quiz started! Test your space biology knowledge.')
   }
 
-  const openChatbot = () => {
-    setShowChatbot(true)
-    setMessage('AI Assistant opened! Ask questions about space biology data.')
+  const openGraphs = () => {
+    if (!user?.permissions.includes('view_data')) {
+      setMessage('Graph visualization requires data access permissions.')
+      return
+    }
+    setShowGraphs(true)
+    setMessage('Analytics dashboard opened! Explore research trends and statistics.')
   }
 
-  const openDataExplorer = () => {
-    setShowDataExplorer(true)
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />
   }
 
   return (
@@ -61,7 +96,15 @@ function App() {
         <div className="container">
           <h1>🚀 NASA Space Biology Engine</h1>
           <p>Analyzing biological data from space missions with AI-powered insights</p>
-          <div className="status">Backend: {backendStatus}</div>
+          <div className="user-info">
+            <span className="status">Backend: {backendStatus}</span>
+            {user && (
+              <div className="user-details">
+                <span>{user.role === 'scientist' ? '🔬' : user.role === 'teacher' ? '👨🏫' : '🎓'} {user.name} ({user.role})</span>
+                <button onClick={handleLogout} className="logout-btn">Logout</button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
       
@@ -130,7 +173,7 @@ function App() {
       <Quiz 
         isOpen={showQuiz} 
         onClose={() => setShowQuiz(false)}
-        userRole="scientist"
+        userRole={user?.role}
       />
       
       <GraphVisualization 
