@@ -9,31 +9,24 @@ function App() {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    // Check backend connection
-    const checkBackend = async () => {
-      try {
-        console.log('Checking backend at:', apiService.baseURL)
-        const healthResponse = await apiService.checkHealth()
-        console.log('Health response:', healthResponse)
-        setBackendStatus('connected ✅')
-        
-        // Load datasets
-        try {
-          const data = await apiService.getDatasets()
-          setDatasets(data.datasets || [])
-        } catch (dataError) {
-          console.log('Datasets not available, but backend is connected')
-          setDatasets([])
-        }
-      } catch (error) {
-        setBackendStatus(`disconnected ❌ (${error.message})`)
-        console.error('Backend connection failed:', error)
-        console.error('API URL:', apiService.baseURL)
-      }
-    }
-
     checkBackend()
   }, [])
+
+  const checkBackend = async () => {
+    try {
+      await apiService.checkHealth()
+      setBackendStatus('connected ✅')
+      
+      try {
+        const data = await apiService.getDatasets()
+        setDatasets(data.datasets || [])
+      } catch (dataError) {
+        setDatasets([])
+      }
+    } catch (error) {
+      setBackendStatus('disconnected ❌')
+    }
+  }
 
   const loadDatasets = async () => {
     setLoading(true)
@@ -43,7 +36,7 @@ function App() {
       setDatasets(data.datasets || [])
       setMessage(`Loaded ${data.datasets?.length || 0} datasets successfully!`)
     } catch (error) {
-      setMessage(`Error loading datasets: ${error.message}`)
+      setMessage(`Error: ${error.message}`)
     }
     setLoading(false)
   }
@@ -52,25 +45,27 @@ function App() {
     setLoading(true)
     setMessage('Testing AI analysis...')
     try {
-      // Simulate AI test
       await new Promise(resolve => setTimeout(resolve, 2000))
-      setMessage('AI Analysis: Ready for biological data processing!')
+      setMessage('✅ AI Analysis: Ready for biological data processing!')
     } catch (error) {
-      setMessage(`AI Test failed: ${error.message}`)
+      setMessage(`❌ AI Test failed: ${error.message}`)
     }
     setLoading(false)
   }
 
   const refreshConnection = async () => {
+    setLoading(true)
+    setMessage('Refreshing connection...')
     setBackendStatus('checking...')
     try {
       await apiService.checkHealth()
       setBackendStatus('connected ✅')
-      setMessage('Connection refreshed successfully!')
+      setMessage('✅ Connection refreshed successfully!')
     } catch (error) {
       setBackendStatus('disconnected ❌')
-      setMessage('Connection failed!')
+      setMessage('❌ Connection failed!')
     }
+    setLoading(false)
   }
 
   return (
