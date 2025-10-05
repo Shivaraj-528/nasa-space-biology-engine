@@ -99,20 +99,7 @@ function App() {
     setShowDataExplorer(true)
   }
 
-  const refreshConnection = async () => {
-    setLoading(true)
-    setMessage('Refreshing connection...')
-    setBackendStatus('checking...')
-    try {
-      await apiService.checkHealth()
-      setBackendStatus('connected ✅')
-      setMessage('✅ Connection refreshed successfully!')
-    } catch (error) {
-      setBackendStatus('disconnected ❌')
-      setMessage('❌ Connection failed!')
-    }
-    setLoading(false)
-  }
+
 
   if (!isAuthenticated) {
     return <LoginPage onLogin={handleLogin} />
@@ -144,13 +131,10 @@ function App() {
             
             <div className="action-buttons">
               <button onClick={openDataExplorer} disabled={loading}>
-                🔍 Open Data Explorer
+                🔍 Data Explorer
               </button>
               <button onClick={openChatbot} disabled={loading}>
-                🤖 AI Analysis Chat
-              </button>
-              <button onClick={refreshConnection} disabled={loading}>
-                {loading ? 'Checking...' : '🔄 Refresh Connection'}
+                🤖 AI Assistant
               </button>
               <button onClick={openQuiz} disabled={loading}>
                 🧠 Take Quiz
