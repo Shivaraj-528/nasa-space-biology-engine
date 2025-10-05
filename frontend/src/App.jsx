@@ -3,7 +3,6 @@ import './App.css'
 import apiService from './services/api.js'
 import DataExplorer from './components/DataExplorer.jsx'
 import AIChatbot from './components/AIChatbot.jsx'
-import LoginPage from './components/LoginPage.jsx'
 import Quiz from './components/Quiz.jsx'
 import GraphVisualization from './components/GraphVisualization.jsx'
 
@@ -16,13 +15,6 @@ function App() {
   const [showChatbot, setShowChatbot] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
   const [showGraphs, setShowGraphs] = useState(false)
-  const [user, setUser] = useState({
-    email: 'demo@nasa.gov',
-    role: 'scientist',
-    name: 'Demo User',
-    permissions: ['view_data', 'export_data', 'ai_analysis', 'advanced_features']
-  })
-  const [isAuthenticated, setIsAuthenticated] = useState(true)
 
   useEffect(() => {
     checkBackend()
@@ -44,35 +36,6 @@ function App() {
     }
   }
 
-  const loadDatasets = async () => {
-    setLoading(true)
-    setMessage('Loading datasets...')
-    try {
-      const data = await apiService.getDatasets()
-      setDatasets(data.datasets || [])
-      setMessage(`Loaded ${data.datasets?.length || 0} datasets successfully!`)
-    } catch (error) {
-      setMessage(`Error: ${error.message}`)
-    }
-    setLoading(false)
-  }
-
-  const handleLogin = (userData) => {
-    setUser(userData)
-    setIsAuthenticated(true)
-    setMessage(`Welcome ${userData.name}! You have ${userData.role} access.`)
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-    setIsAuthenticated(false)
-    setShowDataExplorer(false)
-    setShowChatbot(false)
-    setShowQuiz(false)
-    setShowGraphs(false)
-    setMessage('')
-  }
-
   const openGraphs = () => {
     setShowGraphs(true)
     setMessage('Analytics dashboard opened! Explore research trends and statistics.')
@@ -92,23 +55,13 @@ function App() {
     setShowDataExplorer(true)
   }
 
-
-
   return (
     <div className="app">
       <header className="header">
         <div className="container">
           <h1>🚀 NASA Space Biology Engine</h1>
           <p>Analyzing biological data from space missions with AI-powered insights</p>
-          <div className="user-info">
-            <span className="status">Backend: {backendStatus}</span>
-            {user && (
-              <div className="user-details">
-                <span>{user.role === 'scientist' ? '🔬' : user.role === 'teacher' ? '👨‍🏫' : '🎓'} {user.name} ({user.role})</span>
-                <button onClick={handleLogout} className="logout-btn">Logout</button>
-              </div>
-            )}
-          </div>
+          <div className="status">Backend: {backendStatus}</div>
         </div>
       </header>
       
@@ -177,7 +130,7 @@ function App() {
       <Quiz 
         isOpen={showQuiz} 
         onClose={() => setShowQuiz(false)}
-        userRole={user?.role}
+        userRole="scientist"
       />
       
       <GraphVisualization 
