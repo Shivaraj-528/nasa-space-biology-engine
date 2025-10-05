@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app">
+      <header className="header">
+        <div className="container">
+          <h1>🚀 NASA Space Biology Engine</h1>
+          <p>Analyzing biological data from space missions with AI-powered insights</p>
+        </div>
+      </header>
+      
+      <main className="main">
+        <div className="container">
+          <div className="hero">
+            <h2>Explore Space Biology Data</h2>
+            <p>Access comprehensive biological datasets from NASA missions and discover insights about life in space.</p>
+          </div>
+          
+          <div className="features">
+            <div className="feature-card">
+              <h3>🔬 Data Explorer</h3>
+              <p>Advanced search across GeneLab and NASA biological datasets</p>
+            </div>
+            <div className="feature-card">
+              <h3>🤖 AI Analysis</h3>
+              <p>Machine learning powered insights and predictive modeling</p>
+            </div>
+            <div className="feature-card">
+              <h3>📊 Visualization</h3>
+              <p>Interactive charts and 3D visualizations of biological data</p>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <footer className="footer">
+        <div className="container">
+          <p>© 2024 NASA Space Biology Engine - Open Source Project</p>
+        </div>
+      </footer>
+    </div>
   )
 }
 
