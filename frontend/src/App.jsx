@@ -5,6 +5,7 @@ import DataExplorer from './components/DataExplorer.jsx'
 import AIChatbot from './components/AIChatbot.jsx'
 import LoginPage from './components/LoginPage.jsx'
 import Quiz from './components/Quiz.jsx'
+import GraphVisualization from './components/GraphVisualization.jsx'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
@@ -14,6 +15,7 @@ function App() {
   const [showDataExplorer, setShowDataExplorer] = useState(false)
   const [showChatbot, setShowChatbot] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
+  const [showGraphs, setShowGraphs] = useState(false)
   const [user, setUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
@@ -62,7 +64,17 @@ function App() {
     setShowDataExplorer(false)
     setShowChatbot(false)
     setShowQuiz(false)
+    setShowGraphs(false)
     setMessage('')
+  }
+
+  const openGraphs = () => {
+    if (!user?.permissions.includes('view_data')) {
+      setMessage('Graph visualization requires data access permissions.')
+      return
+    }
+    setShowGraphs(true)
+    setMessage('Analytics dashboard opened! Explore research trends and statistics.')
   }
 
   const openQuiz = () => {
@@ -143,6 +155,9 @@ function App() {
               <button onClick={openQuiz} disabled={loading}>
                 🧠 Take Quiz
               </button>
+              <button onClick={openGraphs} disabled={loading}>
+                📈 Analytics
+              </button>
             </div>
             
             {message && (
@@ -190,6 +205,11 @@ function App() {
         isOpen={showQuiz} 
         onClose={() => setShowQuiz(false)}
         userRole={user?.role}
+      />
+      
+      <GraphVisualization 
+        isOpen={showGraphs} 
+        onClose={() => setShowGraphs(false)}
       />
     </div>
   )
