@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import apiService from './services/api.js'
+import ConnectionTest from './components/ConnectionTest.jsx'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
@@ -45,6 +46,8 @@ function App() {
       
       <main className="main">
         <div className="container">
+          <ConnectionTest />
+          
           <div className="hero">
             <h2>Explore Space Biology Data</h2>
             <p>Access comprehensive biological datasets from NASA missions and discover insights about life in space.</p>
