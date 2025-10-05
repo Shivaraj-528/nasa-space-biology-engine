@@ -44,6 +44,17 @@ const swaggerPath = path.join(__dirname, '../swagger.yaml');
 const swaggerDocument = YAML.load(swaggerPath);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Root route
+app.get('/', (_req, res) => {
+  res.json({ 
+    message: 'NASA Space Biology Engine API', 
+    version: '1.0.0',
+    status: 'running',
+    docs: '/api/docs',
+    health: '/api/health'
+  });
+});
+
 app.get('/healthz', (_req, res) => {
   res.json({ status: 'ok', service: 'backend', time: new Date().toISOString() });
 });
