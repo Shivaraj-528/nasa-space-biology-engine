@@ -4,6 +4,7 @@ import apiService from './services/api.js'
 import DataExplorer from './components/DataExplorer.jsx'
 import AIChatbot from './components/AIChatbot.jsx'
 import LoginPage from './components/LoginPage.jsx'
+import Quiz from './components/Quiz.jsx'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('checking...')
@@ -12,6 +13,7 @@ function App() {
   const [message, setMessage] = useState('')
   const [showDataExplorer, setShowDataExplorer] = useState(false)
   const [showChatbot, setShowChatbot] = useState(false)
+  const [showQuiz, setShowQuiz] = useState(false)
   const [user, setUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
@@ -59,7 +61,13 @@ function App() {
     setIsAuthenticated(false)
     setShowDataExplorer(false)
     setShowChatbot(false)
+    setShowQuiz(false)
     setMessage('')
+  }
+
+  const openQuiz = () => {
+    setShowQuiz(true)
+    setMessage('Quiz started! Test your space biology knowledge.')
   }
 
   const openChatbot = () => {
@@ -132,6 +140,9 @@ function App() {
               <button onClick={refreshConnection} disabled={loading}>
                 {loading ? 'Checking...' : '🔄 Refresh Connection'}
               </button>
+              <button onClick={openQuiz} disabled={loading}>
+                🧠 Take Quiz
+              </button>
             </div>
             
             {message && (
@@ -173,6 +184,12 @@ function App() {
       <AIChatbot 
         isOpen={showChatbot} 
         onClose={() => setShowChatbot(false)} 
+      />
+      
+      <Quiz 
+        isOpen={showQuiz} 
+        onClose={() => setShowQuiz(false)}
+        userRole={user?.role}
       />
     </div>
   )
